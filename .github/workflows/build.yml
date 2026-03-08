@@ -1,35 +1,33 @@
-name: Publish
+name: Build
 on:
   push:
-    tags:
-      - 'v*'
-
-permissions:
-  contents: read
-  id-token: write
+    branches-ignore:
+      - '**-wip'
+  pull_request:
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
-    environment: npm-publish
+    if: >-
+      github.event_name == 'push' ||
+      github.event.pull_request.head.repo.full_name !=
+      github.repository
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          node-version: '22.14.0'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: '20.19.0'
           cache: pnpm
           cache-dependency-path: typescript/pnpm-lock.yaml
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
-      - run: npm install -g npm@latest
       - name: pnpm install
         run: pnpm i
         working-directory: typescript
       - name: build
         run: pnpm build
         working-directory: typescript
-      - name: publish
-        run: npm publish
+      - name: publish preview
+        run: pnpm pkg-pr-new publish --package-manager=pnpm
         working-directory: typescript

@@ -61,9 +61,12 @@ All paths are relative to `typescript/`.
 
 ### CI
 
-- Added `.github/workflows/pkg-pr-new.yml`, a GitHub Actions
-  workflow that publishes a preview package on every pull
-  request using `pkg-pr-new`.
+- Replaced upstream's `publish.yml` (which used npm and
+  Google's wombat-dressing-room proxy) with a pnpm-based
+  workflow that publishes to the standard npm registry.
+- Added `.github/workflows/build.yml`, which builds the
+  TypeScript package on every push and pull request and
+  publishes a preview package using `pkg-pr-new`.
 
 ## Syncing with upstream
 

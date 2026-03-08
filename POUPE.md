@@ -88,3 +88,8 @@ grep -rn "from '\." typescript/ --include='*.ts' \
 Resolve any conflicts in `typescript/package.json` keeping the
 `@poupe` package name and our repository URL, whilst adopting
 upstream's version number and structural changes.
+
+When creating pull requests with `gh`, always specify
+`--repo poupe-ui/material-color-utilities` explicitly. Because
+this is a fork, `gh` defaults to the upstream repository
+otherwise.

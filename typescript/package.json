@@ -1,8 +1,9 @@
 {
   "name": "@poupe/material-color-utilities",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "description": "Algorithms and utilities that power the Material Design 3 (M3) color system, including choosing theme colors from images and creating tones of colors; all in a new color space.",
   "keywords": [
@@ -75,9 +76,9 @@
     "@types/jasmine": "^3.10.3",
     "@types/node": "^18.7.17",
     "jasmine": "^4.0.2",
-    "pkg-pr-new": "~0.0.65",
+    "pkg-pr-new": "~0.0.71",
     "typescript": "^4.5.5",
     "wireit": "^0.9.5"
   },
-  "packageManager": "pnpm@10.30.3+sha512.c961d1e0a2d8e354ecaa5166b822516668b7f44cb5bd95122d590dd81922f606f5473b6d23ec4a5be05e7fcd18e8488d47d978bbe981872f1145d06e9a740017"
+  "packageManager": "pnpm@10.33.4+sha512.1c67b3b359b2d408119ba1ed289f34b8fc3c6873412bec6fd264fbdc82489e510fcbecb9ce9d22dae7f3b76269d8441046014bdca53b9979cd7a561ad631b800"
 }

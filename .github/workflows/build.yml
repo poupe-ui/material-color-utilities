@@ -1,0 +1,39 @@
+name: Build
+on:
+  push:
+    branches-ignore:
+      - '**-wip'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'push' ||
+      github.event.pull_request.head.repo.full_name !=
+      github.repository
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
+        with:
+          run_install: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20.20.2'
+          cache: pnpm
+          cache-dependency-path: typescript/pnpm-lock.yaml
+      - name: pnpm install
+        run: pnpm i
+        working-directory: typescript
+      - name: build
+        run: pnpm build
+        working-directory: typescript
+      - name: publish preview
+        run: pnpm pkg-pr-new publish --package-manager=pnpm --pnpm
+        working-directory: typescript

@@ -1528,7 +1528,7 @@ open class ColorSpec2025 : ColorSpec2021() {
   // Color value calculations //
   // /////////////////////////////////////////////////////////////////
   override fun getHct(scheme: DynamicScheme, color: DynamicColor): Hct {
-    // This is crucial for aesthetics: we aren't simply the taking the standard color
+    // This is crucial for aesthetics: we aren't simply taking the standard color
     // and changing its tone for contrast. Rather, we find the tone for contrast, then
     // use the specified chroma from the palette to construct a new color.
     //
@@ -1536,10 +1536,16 @@ open class ColorSpec2025 : ColorSpec2021() {
     // "recover" intended chroma as contrast increases.
     val palette = color.palette.invoke(scheme)
     val tone = getTone(scheme, color)
-    val hue = palette.hue
     val chromaMultiplier = color.chromaMultiplier?.invoke(scheme) ?: 1.0
+    if (chromaMultiplier == 1.0) {
+      return palette.getHct(tone)
+    }
+
     val chroma = palette.chroma * chromaMultiplier
-    return Hct.from(hue, chroma, tone)
+    if (tone == 99.0 && Hct.isYellow(palette.hue)) {
+      return TonalPalette.fromHueAndChroma(palette.hue, chroma).getHct(tone)
+    }
+    return Hct.from(palette.hue, chroma, tone)
   }
 
   override fun getTone(scheme: DynamicScheme, color: DynamicColor): Double {

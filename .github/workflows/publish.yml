@@ -1,44 +1,30 @@
-# @license
-# Copyright 2021 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 name: Publish
-
 on:
   push:
     tags:
       - 'v*'
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
-  publish_typescript:
+  publish:
     runs-on: ubuntu-latest
-
+    environment: npm-publish
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
         with:
-          node-version: 18
-          cache: npm
-
-      - run: cd typescript && npm ci
-      - run: cd typescript && npm run build
-        env:
-          WIREIT_FAILURES: continue
-
-      - uses: actions/setup-node@v3
+          run_install: false
+      - uses: actions/setup-node@v6
         with:
-          node-version: 18
-          registry-url: 'https://wombat-dressing-room.appspot.com/'
-      - run: cd typescript &&  npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: typescript/pnpm-lock.yaml
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+        working-directory: typescript
+      - name: publish
+        run: pnpm publish --no-git-checks
+        working-directory: typescript
